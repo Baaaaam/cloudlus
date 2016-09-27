@@ -407,18 +407,21 @@ func (s *Server) dispatcher() {
 				continue
 			}
 
-			if j.Fetched.IsZero() {
-				s.log.Printf("[BEAT] job %v (worker %v), ??? left of %v\n", b.JobId, b.WorkerId, j.Timeout)
-			} else {
-				s.log.Printf("[BEAT] job %v (worker %v), %v left of %v\n", b.JobId, b.WorkerId, j.Timeout-time.Now().Sub(j.Fetched), j.Timeout)
-			}
-
-			if time.Now().Sub(j.Fetched) > j.Timeout && j.Timeout > 0 && !j.Fetched.IsZero() {
-				j.Status = StatusFailed
-				s.finnishJob(j)
-				s.log.Printf("[BEAT] sending kill signal: job %v timed out (worker %v)\n", b.JobId, b.WorkerId)
-				b.kill <- true
-			}
+      if j.Timeout > 0 {
+        if j.Fetched.IsZero() {
+          s.log.Printf("[BEAT] job %v (worker %v), ??? left of %v\n", b.JobId, b.WorkerId, j.Timeout)
+        } else {
+          s.log.Printf("[BEAT] job %v (worker %v), %v left of %v\n", b.JobId, b.WorkerId, j.Timeout-time.Now().Sub(j.Fetched), j.Timeout)
+        }
+        if time.Now().Sub(j.Fetched) > j.Timeout && !j.Fetched.IsZero() {
+          j.Status = StatusFailed
+          s.finnishJob(j)
+          s.log.Printf("[BEAT] sending kill signal: job %v timed out (worker %v)\n", b.JobId, b.WorkerId)
+          b.kill <- true
+        }
+      } else {
+        s.log.Printf("[BEAT] job %v (worker %v), working since %v\n", b.JobId, b.WorkerId, time.Now().Sub(j.Fetched))
+      }
 			b.kill <- false
 		}
 	}
