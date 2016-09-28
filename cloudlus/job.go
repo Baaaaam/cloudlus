@@ -24,7 +24,7 @@ const (
 
 const DefaultInfile = "input.xml"
 
-var DefaultTimeout = 0 * time.Minute
+var DefaultTimeout = 1000 * time.Hour
 
 type Job struct {
 	Id        JobId
