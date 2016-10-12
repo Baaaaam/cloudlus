@@ -39,19 +39,19 @@ func ObjEG29(scen *Scenario, db *sql.DB, simid []byte) (float64, error) {
   `
 
   pwr_uox_power := 0.0
-  err := db.QueryRow(q1, "PWR", "init_PWR", simid).Scan(&pwr_uox_power)
+  err := db.QueryRow(q1, "LWR_UOX", "init_LWR_UOX", simid).Scan(&pwr_uox_power)
   if err != nil {
     return math.Inf(1), err
   }
 
   pwr_mox_power := 0.0
-  err = db.QueryRow(q1, "FBR", "PWR", simid).Scan(&pwr_mox_power)
+  err = db.QueryRow(q1, "PWR", "PWR", simid).Scan(&pwr_mox_power)
   if err != nil {
     return math.Inf(1), err
   }
 
   fbr_power := 0.0
-  err = db.QueryRow(q1, "FBR", "PWR", simid).Scan(&fbr_power)
+  err = db.QueryRow(q1, "FBR_driver", "FBR", simid).Scan(&fbr_power)
   if err != nil {
     return math.Inf(1), err
   }
@@ -59,7 +59,7 @@ func ObjEG29(scen *Scenario, db *sql.DB, simid []byte) (float64, error) {
   power_tot:= pwr_uox_power + pwr_mox_power + fbr_power
 
   pu_stored := 0.0
-  err_2 := db.QueryRow(q2, "storage", "storage2", simid).Scan(&pu_stored)
+  err_2 := db.QueryRow(q2, "Storage_E3_second", "Storage_E3_prime", simid).Scan(&pu_stored)
   if err_2 != nil {
     return math.Inf(1), err_2
   }
@@ -76,6 +76,6 @@ func ObjEG29(scen *Scenario, db *sql.DB, simid []byte) (float64, error) {
   }
 
 
-  return (pwr_uox_power/power_tot)* (cap_tot/power_tot) * (pu_stored), nil
+  return math.Pow(pwr_uox_power/power_tot,4)* math.Pow(cap_tot/power_tot,2) * (pu_stored), nil
 
 }
