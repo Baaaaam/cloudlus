@@ -76,6 +76,6 @@ func ObjEG29(scen *Scenario, db *sql.DB, simid []byte) (float64, error) {
   }
 
 
-  return math.Pow(pwr_uox_power/power_tot,4)* math.Pow(cap_tot/power_tot,2) * (1 + pu_stored), nil
+  return math.Pow(1 + pwr_uox_power/power_tot,4)* math.Pow(1 + cap_tot/power_tot,2) * (1 + pu_stored), nil
 
 }
