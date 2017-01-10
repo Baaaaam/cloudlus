@@ -1,2 +1,4 @@
 *.sqlite
 result-*.json
+misc/fuelcycle.org/init.sh
+misc/fuelcycle.org/cyc-cde.tar.gz
