@@ -3,6 +3,7 @@ package scen
 import (
   "database/sql"
   "math"
+  "fmt"
 )
 
 func init() {
@@ -32,6 +33,12 @@ func ObjEG29(scen *Scenario, db *sql.DB, simid []byte) (float64, error) {
   JOIN agents AS a ON a.agentid=p.agentid AND a.simid=p.simid
   WHERE a.Prototype IN (?,?) AND p.simid=?
   `
+
+  fmt.Printf("%v", q1)
+
+
+
+
   q2 := `
   SELECT TOTAL(Quantity) FROM explicitinventory AS p 
   JOIN agententry AS a ON a.agentid=p.agentid AND a.simid=p.simid
